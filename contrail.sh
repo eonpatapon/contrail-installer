@@ -28,6 +28,9 @@ GetDistro
 BS_FL_CONTROLLERS_PORT=${BS_FL_CONTROLLERS_PORT:-localhost:80}
 BS_FL_OF_PORT=${BS_FL_OF_PORT:-6633}
 
+REPO_INIT_RO=${REPO_INIT_RO:-https://github.com/juniper/contrail-vnc}
+REPO_INIT=${REPO_INIT:-git@github.com/juniper/contrail-vnc}
+
 # Cassandra JAVA Memory Options
 CASS_MAX_HEAP_SIZE=${CASS_MAX_HEAP_SIZE:-1G}
 CASS_HEAP_NEWSIZE=${CASS_HEAP_NEWSIZE:-200M}
@@ -430,21 +433,21 @@ function repo_initialize {
         git config --global --get user.email || git config --global user.email "anonymous@nowhere.com"
         if [ "$CONTRAIL_REPO_PROTO" == "ssh" ]; then
             if [ $CONTRAIL_BRANCH ];then
-                repo init -u git@github.com:juniper/contrail-vnc -b $CONTRAIL_BRANCH
+                repo init -u $REPO_INIT -b $CONTRAIL_BRANCH
                 rev_original="refs\/heads\/master"
                 rev_new="refs\/heads\/"$CONTRAIL_BRANCH 
 	        sed -i "s/$rev_original/$rev_new/" .repo/manifest.xml
             else
-                repo init -u git@github.com:juniper/contrail-vnc
+                repo init -u $REPO_INIT
             fi    
         else
             if [ $CONTRAIL_BRANCH ];then
-                repo init -u https://github.com/juniper/contrail-vnc -b $CONTRAIL_BRANCH
+                repo init -u $REPO_INIT_RO -b $CONTRAIL_BRANCH
                 rev_original="refs\/heads\/master"
                 rev_new="refs\/heads\/"$CONTRAIL_BRANCH 
 	        sed -i "s/$rev_original/$rev_new/" .repo/manifest.xml
             else
-                repo init -u https://github.com/juniper/contrail-vnc 
+                repo init -u $REPO_INIT_RO
             fi
             sed -i 's/fetch=".."/fetch=\"https:\/\/github.com\/juniper\/\"/' .repo/manifest.xml
         fi
@@ -458,21 +461,21 @@ function repo_initialize_backup {
         git config --global --get user.email || git config --global user.email "anonymous@nowhere.com"
         if [ "$CONTRAIL_REPO_PROTO" == "ssh" ]; then
             if [ $CONTRAIL_BRANCH ];then
-                repo init -u git@github.com:Juniper/contrail-vnc -b $CONTRAIL_BRANCH
+                repo init -u $REPO_INIT -b $CONTRAIL_BRANCH
                 rev_original="refs\/heads\/master"
                 rev_new="refs\/heads\/"$CONTRAIL_BRANCH 
 	        sed -i "s/$rev_original/$rev_new/" .repo/manifest.xml
             else
-                repo init -u git@github.com:Juniper/contrail-vnc 
+                repo init -u $REPO_INIT 
             fi
         else
             if [ $CONTRAIL_BRANCH ];then
-                repo init -u https://github.com/Juniper/contrail-vnc -b $CONTRAIL_BRANCH
+                repo init -u $REPO_INIT_RO -b $CONTRAIL_BRANCH
                 rev_original="refs\/heads\/master"
                 rev_new="refs\/heads\/"$CONTRAIL_BRANCH 
 	        sed -i "s/$rev_original/$rev_new/" .repo/manifest.xml
             else
-                repo init -u https://github.com/Juniper/contrail-vnc 
+                repo init -u $REPO_INIT_RO
             fi
             sed -i 's/fetch=".."/fetch=\"https:\/\/github.com\/Juniper\/\"/' .repo/manifest.xml
         fi
